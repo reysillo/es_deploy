@@ -27,7 +27,7 @@ RUN apt-get install oracle-java8-set-default
 
 # ----------- Install tomcat -------------
 RUN \
-    wget -O /tmp/tomcat.tar.gz http://archive.apache.org/dist/tomcat/tomcat-8/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz && \
+    wget -O /tmp/tomcat.tar.gz http://apache.arvixe.com/tomcat/tomcat-8/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz && \
   #mkdir $TOMCAT_PATH && \
   cd /tmp && \
   tar zxf /tmp/tomcat.tar.gz && \
@@ -40,6 +40,20 @@ RUN \
 EXPOSE $TOMCAT_PORT
 EXPOSE 22
 
+
+# ----------- Install PhantomJS -------------
+
+RUN sudo apt-get  -y install build-essential chrpath libssl-dev libxft-dev  libfreetype6 libfreetype6-dev libfontconfig1 libfontconfig1-dev
+
+RUN \
+  cd ~ && \
+  export PHANTOM_JS="phantomjs-1.9.8-linux-x86_64"  && \
+  wget https://bitbucket.org/ariya/phantomjs/downloads/$PHANTOM_JS.tar.bz2  && \
+  tar xvjf $PHANTOM_JS.tar.bz2  && \
+  mv $PHANTOM_JS /usr/local/share  && \
+  ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/bin
+
+RUN phantomjs --version
 
 # ----------- Configure SSH -------------
 
