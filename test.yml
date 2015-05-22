@@ -1,6 +1,0 @@
----
-- hosts: SourceCodeServers
-  vars:
-  tasks:
-    - name:
-      shell: ls
