@@ -21,7 +21,6 @@ ENV TOMCAT_VERSION 8.0.21
 ENV TOMCAT_PORT 8080
 ENV TOMCAT_PATH /opt/tomcat
 
-
 # ----------- Install java 8 -------------
 RUN apt-get -y install software-properties-common
 RUN add-apt-repository ppa:webupd8team/java
