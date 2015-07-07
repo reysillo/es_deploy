@@ -22,6 +22,7 @@ RUN echo "oracle-java7-installer shared/accepted-oracle-license-v1-1 boolean tru
 RUN apt-get -y install oracle-java7-installer
 RUN apt-get install oracle-java7-set-default
 
+
 # Install tomcat
 RUN \
     wget -O /tmp/tomcat.tar.gz http://archive.apache.org/dist/tomcat/tomcat-7/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz && \
