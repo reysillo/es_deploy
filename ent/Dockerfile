@@ -13,7 +13,6 @@ ENV TOMCAT_VERSION 7.0.59
 ENV TOMCAT_PORT 8080
 ENV TOMCAT_PATH /opt/tomcat
 
-
 # Install java 7
 RUN apt-get -y install software-properties-common
 RUN add-apt-repository ppa:webupd8team/java
