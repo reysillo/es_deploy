@@ -6,12 +6,23 @@ MAINTAINER Reinaldo Calderón
 RUN \
   apt-get update && \
   apt-get upgrade -y && \
+  apt-get install curl -y && \
+  apt-get install logrotate -y && \
+  apt-get install locales -y && \
+  update-locale LANG=C.UTF-8 LC_MESSAGES=POSIX && \
+  locale-gen en_US.UTF-8 && \
+  dpkg-reconfigure locales && \
   apt-get install -y vim nano git wget libfreetype6 libfontconfig bzip2 supervisor zip unzip openssh-server && \
   mkdir -p /srv/var /var/log/supervisor /opt
+
 
 ENV TOMCAT_VERSION 7.0.59
 ENV TOMCAT_PORT 8080
 ENV TOMCAT_PATH /opt/tomcat
+
+ENV ACTIVEMQ_VERSION 5.10.0
+ENV ACTIVEMQ_PATH /opt/activemq
+
 
 # Install java 7
 RUN apt-get -y install software-properties-common
@@ -22,9 +33,10 @@ RUN apt-get -y install oracle-java7-installer
 RUN apt-get install oracle-java7-set-default
 
 # Install tomcat
+
 RUN \
-    wget -O /tmp/tomcat.tar.gz http://archive.apache.org/dist/tomcat/tomcat-7/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz && \
-  #mkdir $TOMCAT_PATH && \
+
+  wget -O /tmp/tomcat.tar.gz http://archive.apache.org/dist/tomcat/tomcat-7/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz && \
   cd /tmp && \
   tar zxf /tmp/tomcat.tar.gz && \
   ls /tmp && \
@@ -35,6 +47,22 @@ RUN \
 
 EXPOSE $TOMCAT_PORT
 EXPOSE 22
+
+# Install activeMQ
+
+RUN \
+
+  wget http://archive.apache.org/dist/activemq/$ACTIVEMQ_VERSION/apache-activemq-$ACTIVEMQ_VERSION-bin.tar.gz && \
+  cd /tmp && \
+  tar zxf /tmp/apache-activemq-$ACTIVEMQ_VERSION-bin.tar.gz && \
+  ls /tmp && \
+  mv /tmp/apache-activemq-$ACTIVEMQ_VERSION* $ACTIVEMQ_PATH && \
+  rm /tmp/apache-activemq-$ACTIVEMQ_VERSION-bin.tar.gz
+
+  WORKDIR $ACTIVEMQ_PATH
+  EXPOSE 61616 8161
+  #EXPOSE 61612 61613 61616 8161
+
 
 RUN echo deb http://archive.ubuntu.com/ubuntu trusty main universe > /etc/apt/sources.list.d/trusty.list
 
