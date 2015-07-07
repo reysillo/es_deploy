@@ -57,7 +57,6 @@ RUN \
   EXPOSE 61616 8161
   #EXPOSE 61612 61613 61616 8161
 
-
 RUN echo deb http://archive.ubuntu.com/ubuntu trusty main universe > /etc/apt/sources.list.d/trusty.list
 
 # Clean
