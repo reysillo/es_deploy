@@ -6,12 +6,6 @@ MAINTAINER Reinaldo Calderón
 RUN \
   apt-get update && \
   apt-get upgrade -y && \
-  apt-get install curl -y && \
-  apt-get install logrotate -y && \
-  apt-get install locales -y && \
-  update-locale LANG=C.UTF-8 LC_MESSAGES=POSIX && \
-  locale-gen en_US.UTF-8 && \
-  dpkg-reconfigure locales && \
   apt-get install -y vim nano git wget libfreetype6 libfontconfig bzip2 supervisor zip unzip openssh-server && \
   mkdir -p /srv/var /var/log/supervisor /opt
 
@@ -90,3 +84,10 @@ RUN chmod 755 $TOMCAT_PATH/bin/tomcat_supervisord_wrapper.sh
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 CMD ["/usr/bin/supervisord"]
 CMD ["/bin/bash", "-c", "bin/activemq console"]
+
+#locale
+RUN \
+  apt-get install locales -y && \
+  update-locale LANG=C.UTF-8 LC_MESSAGES=POSIX && \
+  locale-gen en_US.UTF-8 && \
+  dpkg-reconfigure locales
