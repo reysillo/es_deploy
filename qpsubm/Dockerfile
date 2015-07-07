@@ -40,7 +40,6 @@ RUN \
 EXPOSE $TOMCAT_PORT
 EXPOSE 22
 
-
 # ----------- Install PhantomJS -------------
 
 RUN sudo apt-get  -y install build-essential chrpath libssl-dev libxft-dev  libfreetype6 libfreetype6-dev libfontconfig1 libfontconfig1-dev
