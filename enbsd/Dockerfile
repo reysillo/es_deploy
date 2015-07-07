@@ -7,6 +7,7 @@ MAINTAINER Reinaldo Calderón
 RUN ls
 
 RUN \
+  ls && \
   apt-get update && \
   apt-get upgrade -y && \
   apt-get install -y vim nano git wget libfreetype6 libfontconfig bzip2 supervisor zip unzip openssh-server && \
