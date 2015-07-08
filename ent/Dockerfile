@@ -7,9 +7,6 @@ RUN \
   apt-get update && \
   apt-get upgrade -y && \
   apt-get install -y vim nano git wget libfreetype6 libfontconfig bzip2 supervisor zip unzip openssh-server make g++ patch zlib1g-dev libgif-dev curl locales && \
-  update-locale LANG=C.UTF-8 LC_MESSAGES=POSIX && \
-  locale-gen en_US en_US.UTF-8 && \
-  dpkg-reconfigure locales && \
   mkdir -p /srv/var /var/log/supervisor /opt
 
 ENV TOMCAT_VERSION 7.0.59
@@ -17,6 +14,11 @@ ENV TOMCAT_PORT 8080
 ENV TOMCAT_PATH /opt/tomcat
 ENV ACTIVEMQ_VERSION 5.10.0
 ENV ACTIVEMQ_PATH /opt/activemq
+
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 ADD jpeg.patch /tmp/jpeg.patch
 
