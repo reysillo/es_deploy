@@ -6,15 +6,19 @@ MAINTAINER Reinaldo Calderón
 RUN \
   apt-get update && \
   apt-get upgrade -y && \
-  apt-get install -y vim nano git wget libfreetype6 libfontconfig bzip2 supervisor zip unzip openssh-server && \
+  apt-get install -y vim nano git wget libfreetype6 libfontconfig bzip2 supervisor zip unzip openssh-server make g++ patch zlib1g-dev libgif-dev curl locales && \
+  update-locale LANG=C.UTF-8 LC_MESSAGES=POSIX && \
+  locale-gen en_US en_US.UTF-8 && \
+  dpkg-reconfigure locales
   mkdir -p /srv/var /var/log/supervisor /opt
 
 ENV TOMCAT_VERSION 7.0.59
 ENV TOMCAT_PORT 8080
 ENV TOMCAT_PATH /opt/tomcat
-
 ENV ACTIVEMQ_VERSION 5.10.0
 ENV ACTIVEMQ_PATH /opt/activemq
+
+ADD jpeg.patch /tmp/jpeg.patch
 
 # Install java 7
 RUN apt-get -y install software-properties-common
@@ -54,6 +58,38 @@ RUN \
   WORKDIR $ACTIVEMQ_PATH
   EXPOSE 61616 8161
   #EXPOSE 61612 61613 61616 8161
+
+# Install swftool
+
+RUN
+    cd /tmp && \
+    wget http://www.swftools.org/swftools-2013-04-09-1007.tar.gz && \
+    wget http://download.savannah.gnu.org/releases/freetype/freetype-2.4.0.tar.gz && \
+    wget http://www.ijg.org/files/jpegsrc.v9a.tar.gz
+
+RUN
+    cd /tmp && tar zxf freetype-2.4.0.tar.gz && \
+    tar zxf jpegsrc.v9a.tar.gz && \
+    tar zxf swftools-2013-04-09-1007.tar.gz
+
+RUN
+    cd /tmp/jpeg-9a && \
+    ./configure && make && make install
+
+RUN
+    cd /tmp/freetype-2.4.0 && \
+    ./configure && make && make install
+
+RUN
+    cd /tmp && patch -p0 < /tmp/jpeg.patch && \
+    cd swftools-2013-04-09-1007 && \
+    ./configure && make && make install && \
+    ranlib /usr/local/lib/libjpeg.a && ldconfig /usr/local/lib
+
+RUN
+    cd /tmp && rm -rf swftools* && \
+    rm -rf jpeg* && rm -rf freetype*
+
 
 RUN echo deb http://archive.ubuntu.com/ubuntu trusty main universe > /etc/apt/sources.list.d/trusty.list
 

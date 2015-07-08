@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM ubuntu:14.10
 
 MAINTAINER Reinaldo Calderón
 
@@ -9,11 +9,10 @@ RUN ls
 RUN \
   apt-get update && \
   apt-get upgrade -y && \
-  apt-get install -y vim nano git wget libfreetype6 libfontconfig bzip2 supervisor zip unzip openssh-server && \
+  apt-get install -y vim nano git wget libfreetype6 libfontconfig bzip2 supervisor zip unzip openssh-server curl locales && \
   mkdir -p /srv/var /var/log/supervisor /opt && \
-  apt-get install locales -y && \
   update-locale LANG=C.UTF-8 LC_MESSAGES=POSIX && \
-  locale-gen en_US.UTF-8 && \
+  locale-gen en_US en_US.UTF-8 && \
   dpkg-reconfigure locales
 
 ENV TOMCAT_VERSION 8.0.21
