@@ -10,7 +10,7 @@ RUN \
   apt-get update && \
   apt-get upgrade -y && \
   apt-get install -y vim nano git wget libfreetype6 libfontconfig bzip2 supervisor zip unzip openssh-server locales && \
-  mkdir -p /srv/var /var/log/supervisor /opt && \
+  mkdir -p /srv/var /var/log/supervisor /opt
 
 ENV TOMCAT_VERSION 8.0.21
 ENV TOMCAT_PORT 8080
