@@ -6,7 +6,7 @@ MAINTAINER Reinaldo Calderón
 RUN \
   apt-get update && \
   apt-get upgrade -y && \
-  apt-get install -y vim nano git wget libfreetype6 libfontconfig bzip2 supervisor zip unzip openssh-server make g++ patch zlib1g-dev libgif-dev curl locales && \
+  apt-get install -y vim nano git wget libfreetype6 libfontconfig bzip2 supervisor zip unzip openssh-server make g++ patch zlib1g-dev libgif-dev && \
   mkdir -p /srv/var /var/log/supervisor /opt
 
 ENV TOMCAT_VERSION 7.0.59
@@ -15,9 +15,7 @@ ENV TOMCAT_PATH /opt/tomcat
 ENV ACTIVEMQ_VERSION 5.10.0
 ENV ACTIVEMQ_PATH /opt/activemq
 
-ADD jpeg.patch /tmp/jpeg.patch
-
-# Install java 7
+# ----------- Install java 7 -------------#
 RUN apt-get -y install software-properties-common
 RUN add-apt-repository ppa:webupd8team/java
 RUN apt-get -y update
@@ -25,10 +23,8 @@ RUN echo "oracle-java7-installer shared/accepted-oracle-license-v1-1 boolean tru
 RUN apt-get -y install oracle-java7-installer
 RUN apt-get install oracle-java7-set-default
 
-# Install tomcat
-
+# ----------- Install Tomcat -------------#
 RUN \
-
   wget -O /tmp/tomcat.tar.gz http://archive.apache.org/dist/tomcat/tomcat-7/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz && \
   cd /tmp && \
   tar zxf /tmp/tomcat.tar.gz && \
@@ -41,10 +37,8 @@ RUN \
 EXPOSE $TOMCAT_PORT
 EXPOSE 22
 
-# Install activeMQ
-
+# ----------- Install ActiveMQ -------------#
 RUN \
-
   wget -O /tmp/activemq.tar.gz http://archive.apache.org/dist/activemq/$ACTIVEMQ_VERSION/apache-activemq-$ACTIVEMQ_VERSION-bin.tar.gz && \
   cd /tmp && \
   tar zxf /tmp/activemq.tar.gz && \
@@ -56,37 +50,32 @@ RUN \
   EXPOSE 61616 8161
   #EXPOSE 61612 61613 61616 8161
 
-# Install swftool
-
-RUN
-    cd /tmp && \
+# ----------- Install swftool -------------#
+RUN cd /tmp && \
     wget http://www.swftools.org/swftools-2013-04-09-1007.tar.gz && \
     wget http://download.savannah.gnu.org/releases/freetype/freetype-2.4.0.tar.gz && \
     wget http://www.ijg.org/files/jpegsrc.v9a.tar.gz
 
-RUN
-    cd /tmp && tar zxf freetype-2.4.0.tar.gz && \
+RUN cd /tmp && tar zxf freetype-2.4.0.tar.gz && \
     tar zxf jpegsrc.v9a.tar.gz && \
     tar zxf swftools-2013-04-09-1007.tar.gz
 
-RUN
-    cd /tmp/jpeg-9a && \
+RUN cd /tmp/jpeg-9a && \
     ./configure && make && make install
 
-RUN
-    cd /tmp/freetype-2.4.0 && \
+RUN cd /tmp/freetype-2.4.0 && \
     ./configure && make && make install
 
-RUN
-    cd /tmp && patch -p0 < /tmp/jpeg.patch && \
+RUN cd /tmp && patch -p0 < /tmp/jpeg.patch && \
     cd swftools-2013-04-09-1007 && \
     ./configure && make && make install && \
     ranlib /usr/local/lib/libjpeg.a && ldconfig /usr/local/lib
 
-RUN
-    cd /tmp && rm -rf swftools* && \
+RUN cd /tmp && rm -rf swftools* && \
     rm -rf jpeg* && rm -rf freetype*
 
+
+# ----------- -------------#
 
 RUN echo deb http://archive.ubuntu.com/ubuntu trusty main universe > /etc/apt/sources.list.d/trusty.list
 
