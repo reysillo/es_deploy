@@ -78,28 +78,11 @@ ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 CMD ["/usr/bin/supervisord"]
 
 # ----------- Install swftool -------------#
-ADD jpeg.patch /tmp/jpeg.patch
+RUN add-apt-repository ppa:guilhem-fr/swftools
+RUN apt-get -y update
+RUN apt-get install swftools
 
-RUN cd /tmp && \
-    wget http://www.swftools.org/swftools-2013-04-09-1007.tar.gz && \
-    wget http://download.savannah.gnu.org/releases/freetype/freetype-2.4.0.tar.gz && \
-    wget http://www.ijg.org/files/jpegsrc.v9a.tar.gz
-
-RUN cd /tmp && tar zxf freetype-2.4.0.tar.gz && \
-    tar zxf jpegsrc.v9a.tar.gz && \
-    tar zxf swftools-2013-04-09-1007.tar.gz
-
-RUN cd /tmp/jpeg-9a && \
-    ./configure && make && make install
-
-RUN cd /tmp/freetype-2.4.0 && \
-    ./configure && make && make install
-
-RUN cd /tmp && patch -p0 < /tmp/jpeg.patch && \
-    cd swftools-2013-04-09-1007 && \
-    ./configure && make && make install && \
-    ranlib /usr/local/lib/libjpeg.a && ldconfig /usr/local/lib
-
-RUN cd /tmp && rm -rf swftools* && \
-    rm -rf jpeg* && rm -rf freetype*
-
+# ----------- Install WHOIS -------------#
+RUN add-apt-repository ppa:nathan-renniewaldock/ppa
+RUN apt-get -y update
+RUN apt-get install whois
