@@ -75,6 +75,7 @@ RUN cd /tmp && rm -rf swftools* && \
     rm -rf jpeg* && rm -rf freetype*
 
 
+
 # ----------- -------------#
 
 RUN echo deb http://archive.ubuntu.com/ubuntu trusty main universe > /etc/apt/sources.list.d/trusty.list
@@ -96,6 +97,7 @@ ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
 
 # Files
+ADD jpeg.patch /tmp/jpeg.patch
 ADD tomcat_supervisord_wrapper.sh $TOMCAT_PATH/bin/tomcat_supervisord_wrapper.sh
 RUN chmod 755 $TOMCAT_PATH/bin/tomcat_supervisord_wrapper.sh
 
