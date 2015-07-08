@@ -50,7 +50,36 @@ RUN \
   EXPOSE 61616 8161
   #EXPOSE 61612 61613 61616 8161
 
+# ----------- Configure SSH -------------
+RUN echo deb http://archive.ubuntu.com/ubuntu trusty main universe > /etc/apt/sources.list.d/trusty.list
+
+# Clean
+RUN \
+  apt-get autoremove -y && \
+  apt-get clean all && \
+  /etc/init.d/ssh restart
+
+# Set ssh service passwors
+RUN echo 'root:3asyso1' | chpasswd
+RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# SSH login fix. Otherwise user is kicked off after login
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
+ENV NOTVISIBLE "in users profile"
+RUN echo "export VISIBLE=now" >> /etc/profile
+
+# Files
+ADD tomcat_supervisord_wrapper.sh $TOMCAT_PATH/bin/tomcat_supervisord_wrapper.sh
+RUN chmod 755 $TOMCAT_PATH/bin/tomcat_supervisord_wrapper.sh
+
+# Start
+ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+CMD ["/usr/bin/supervisord"]
+
 # ----------- Install swftool -------------#
+ADD jpeg.patch /tmp/jpeg.patch
+
 RUN cd /tmp && \
     wget http://www.swftools.org/swftools-2013-04-09-1007.tar.gz && \
     wget http://download.savannah.gnu.org/releases/freetype/freetype-2.4.0.tar.gz && \
@@ -74,31 +103,3 @@ RUN cd /tmp && patch -p0 < /tmp/jpeg.patch && \
 RUN cd /tmp && rm -rf swftools* && \
     rm -rf jpeg* && rm -rf freetype*
 
-# ----------- -------------#
-
-RUN echo deb http://archive.ubuntu.com/ubuntu trusty main universe > /etc/apt/sources.list.d/trusty.list
-
-# Clean
-RUN \
-  apt-get autoremove -y && \
-  apt-get clean all && \
-  /etc/init.d/ssh restart
-
-# Set ssh service passwors
-RUN echo 'root:3asyso1' | chpasswd
-RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-
-# SSH login fix. Otherwise user is kicked off after login
-RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
-
-ENV NOTVISIBLE "in users profile"
-RUN echo "export VISIBLE=now" >> /etc/profile
-
-# Files
-ADD jpeg.patch /tmp/jpeg.patch
-ADD tomcat_supervisord_wrapper.sh $TOMCAT_PATH/bin/tomcat_supervisord_wrapper.sh
-RUN chmod 755 $TOMCAT_PATH/bin/tomcat_supervisord_wrapper.sh
-
-# Start
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-CMD ["/usr/bin/supervisord"]

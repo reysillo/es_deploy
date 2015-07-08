@@ -16,13 +16,6 @@ ENV TOMCAT_VERSION 8.0.21
 ENV TOMCAT_PORT 8080
 ENV TOMCAT_PATH /opt/tomcat
 
-# ----------- Reconfigure Locales -------------
-RUN apt-get -qqy install locales
-RUN locale-gen --purge de_DE de_DE.UTF-8
-RUN locale-gen --purge en_US en_US.UTF-8
-RUN dpkg-reconfigure locales
-ENV LC_ALL en_US.UTF-8
-
 # ----------- Install java 8 -------------
 RUN apt-get -y install software-properties-common
 RUN add-apt-repository ppa:webupd8team/java
@@ -87,3 +80,10 @@ RUN chmod 755 $TOMCAT_PATH/bin/tomcat_supervisord_wrapper.sh
 # Start
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 CMD ["/usr/bin/supervisord"]
+
+# ----------- Reconfigure Locales -------------
+RUN apt-get -qqy install locales
+RUN locale-gen --purge de_DE de_DE.UTF-8
+RUN locale-gen --purge en_US en_US.UTF-8
+RUN dpkg-reconfigure locales
+ENV LC_ALL en_US.UTF-8
