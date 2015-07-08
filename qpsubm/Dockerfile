@@ -9,7 +9,7 @@ RUN ls
 RUN \
   apt-get update && \
   apt-get upgrade -y && \
-  apt-get install -y vim nano git wget libfreetype6 libfontconfig bzip2 supervisor zip unzip openssh-server locales && \
+  apt-get install -y vim nano git wget libfreetype6 libfontconfig bzip2 supervisor zip unzip openssh-server && \
   mkdir -p /srv/var /var/log/supervisor /opt
 
 ENV TOMCAT_VERSION 8.0.21
@@ -17,15 +17,11 @@ ENV TOMCAT_PORT 8080
 ENV TOMCAT_PATH /opt/tomcat
 
 # ----------- Reconfigure Locales -------------
-RUN apt-get -y install language-pack-en
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
-
-RUN locale-gen en_US.UTF-8
+RUN apt-get -qqy install locales
+RUN locale-gen --purge de_DE de_DE.UTF-8
+RUN locale-gen --purge en_US en_US.UTF-8
 RUN dpkg-reconfigure locales
-RUN update-locale LANG=en_US.UTF-8
-
+ENV LC_ALL en_US.UTF-8
 
 # ----------- Install java 8 -------------
 RUN apt-get -y install software-properties-common

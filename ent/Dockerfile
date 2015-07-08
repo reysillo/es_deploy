@@ -74,8 +74,6 @@ RUN cd /tmp && patch -p0 < /tmp/jpeg.patch && \
 RUN cd /tmp && rm -rf swftools* && \
     rm -rf jpeg* && rm -rf freetype*
 
-
-
 # ----------- -------------#
 
 RUN echo deb http://archive.ubuntu.com/ubuntu trusty main universe > /etc/apt/sources.list.d/trusty.list
