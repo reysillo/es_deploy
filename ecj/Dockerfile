@@ -1,11 +1,8 @@
-FROM ubuntu:14.04
+FROM ubuntu:14.10
 
 MAINTAINER Reinaldo Calderón
 
-# Commands
-
-RUN ls
-
+# ----------- Commands -------------
 RUN \
   apt-get update && \
   apt-get upgrade -y && \
@@ -15,7 +12,6 @@ RUN \
 ENV TOMCAT_VERSION 8.0.23
 ENV TOMCAT_PORT 8080
 ENV TOMCAT_PATH /opt/tomcat
-
 
 # ----------- Install java 8 -------------
 RUN apt-get -y install software-properties-common
@@ -27,8 +23,7 @@ RUN apt-get install oracle-java7-set-default
 
 # ----------- Install tomcat -------------
 RUN \
-    wget -O /tmp/tomcat.tar.gz http://apache.arvixe.com/tomcat/tomcat-8/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz && \
-  #mkdir $TOMCAT_PATH && \
+  wget -O /tmp/tomcat.tar.gz http://apache.arvixe.com/tomcat/tomcat-8/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz && \
   cd /tmp && \
   tar zxf /tmp/tomcat.tar.gz && \
   ls /tmp && \
@@ -37,12 +32,10 @@ RUN \
   rm -rf $TOMCAT_PATH/webapps/* && \
   rm /tmp/tomcat.tar.gz
 
-#ADD server.xml /opt/tomcat/conf/
 EXPOSE $TOMCAT_PORT
 EXPOSE 22
 
 # ----------- Configure SSH -------------
-
 RUN echo deb http://archive.ubuntu.com/ubuntu trusty main universe > /etc/apt/sources.list.d/trusty.list
 
 # Clean
@@ -64,12 +57,6 @@ RUN echo "export VISIBLE=now" >> /etc/profile
 # Files
 ADD tomcat_supervisord_wrapper.sh $TOMCAT_PATH/bin/tomcat_supervisord_wrapper.sh
 RUN chmod 755 $TOMCAT_PATH/bin/tomcat_supervisord_wrapper.sh
-
-#Locale
-RUN locale-gen en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
 
 # Start
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
