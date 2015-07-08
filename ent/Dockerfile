@@ -79,10 +79,10 @@ CMD ["/usr/bin/supervisord"]
 
 # ----------- Install swftool -------------#
 RUN add-apt-repository ppa:guilhem-fr/swftools
-RUN apt-get -y update
+#RUN apt-get -y update
 RUN apt-get -y install swftools
 
 # ----------- Install WHOIS -------------#
 RUN add-apt-repository ppa:nathan-renniewaldock/ppa
-RUN apt-get -y update
+#RUN apt-get -y update
 RUN apt-get -y install whois
