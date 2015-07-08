@@ -82,8 +82,15 @@ ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 CMD ["/usr/bin/supervisord"]
 
 # ----------- Reconfigure Locales -------------
+RUN apt-get -y install language-pack-en
 RUN apt-get -qqy install locales
 RUN locale-gen --purge de_DE de_DE.UTF-8
 RUN locale-gen --purge en_US en_US.UTF-8
-RUN dpkg-reconfigure locales
+
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
+
+RUN locale-gen en_US.UTF-8
+RUN dpkg-reconfigure locales
+RUN update-locale LANG=en_US.UTF-8
