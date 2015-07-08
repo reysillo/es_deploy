@@ -9,14 +9,12 @@ RUN \
   apt-get install -y vim nano git wget libfreetype6 libfontconfig bzip2 supervisor zip unzip openssh-server && \
   mkdir -p /srv/var /var/log/supervisor /opt
 
-
 ENV TOMCAT_VERSION 7.0.59
 ENV TOMCAT_PORT 8080
 ENV TOMCAT_PATH /opt/tomcat
 
 ENV ACTIVEMQ_VERSION 5.10.0
 ENV ACTIVEMQ_PATH /opt/activemq
-
 
 # Install java 7
 RUN apt-get -y install software-properties-common
