@@ -9,7 +9,7 @@ RUN \
   apt-get install -y vim nano git wget libfreetype6 libfontconfig bzip2 supervisor zip unzip openssh-server make g++ patch zlib1g-dev libgif-dev curl locales && \
   update-locale LANG=C.UTF-8 LC_MESSAGES=POSIX && \
   locale-gen en_US en_US.UTF-8 && \
-  dpkg-reconfigure locales
+  dpkg-reconfigure locales && \
   mkdir -p /srv/var /var/log/supervisor /opt
 
 ENV TOMCAT_VERSION 7.0.59
