@@ -44,12 +44,12 @@ EXPOSE 22
 
 RUN \
 
-  wget http://archive.apache.org/dist/activemq/$ACTIVEMQ_VERSION/apache-activemq-$ACTIVEMQ_VERSION-bin.tar.gz && \
+  wget -O /tmp/activemq.tar.gz http://archive.apache.org/dist/activemq/$ACTIVEMQ_VERSION/apache-activemq-$ACTIVEMQ_VERSION-bin.tar.gz && \
   cd /tmp && \
-  tar zxf /tmp/apache-activemq-$ACTIVEMQ_VERSION-bin.tar.gz && \
+  tar zxf /tmp/activemq.tar.gz && \
   ls /tmp && \
-  mv /tmp/apache-activemq-$ACTIVEMQ_VERSION* $ACTIVEMQ_PATH && \
-  rm /tmp/apache-activemq-$ACTIVEMQ_VERSION-bin.tar.gz
+  mv /tmp/apache-activemq* $ACTIVEMQ_PATH && \
+  rm /tmp/activemq.tar.gz
 
   WORKDIR $ACTIVEMQ_PATH
   EXPOSE 61616 8161
