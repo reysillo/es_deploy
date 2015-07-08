@@ -15,11 +15,6 @@ ENV TOMCAT_PATH /opt/tomcat
 ENV ACTIVEMQ_VERSION 5.10.0
 ENV ACTIVEMQ_PATH /opt/activemq
 
-RUN locale-gen en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
-
 ADD jpeg.patch /tmp/jpeg.patch
 
 # Install java 7

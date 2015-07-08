@@ -19,9 +19,11 @@ ENV TOMCAT_PATH /opt/tomcat
 # ----------- Reconfigure Locales -------------
 RUN dpkg-reconfigure locales && \
 locale-gen en_US.UTF-8 && \
-/usr/sbin/update-locale LANG=en_US.UTF-8
+/usr/sbin/update-locale LANG=en_US.UTF-8 &&\
+/usr/sbin/update-locale LANGUAGE en_US:en &&\
+/usr/sbin/update-locale LC_ALL en_US.UTF-8
 
-# Install needed default locale for Makefly
+# Install needed default locale
 RUN echo 'en_US.UTF-8 UTF-8' >> /etc/locale.gen && \
 locale-gen
 
