@@ -1,4 +1,4 @@
-FROM ubuntu:14.10
+FROM ubuntu:14.04
 
 MAINTAINER Reinaldo Calderón
 
@@ -80,4 +80,3 @@ RUN chmod 755 $TOMCAT_PATH/bin/tomcat_supervisord_wrapper.sh
 # Start
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 CMD ["/usr/bin/supervisord"]
-CMD ["/bin/bash", "-c", "bin/activemq console"]
