@@ -74,7 +74,7 @@ ADD tomcat_supervisord_wrapper.sh $TOMCAT_PATH/bin/tomcat_supervisord_wrapper.sh
 RUN chmod 755 $TOMCAT_PATH/bin/tomcat_supervisord_wrapper.sh
 
 # ----------- Install swftool -----------
-RUN add-apt-repository -y ppa:guilhem-fr/swftools
+# RUN add-apt-repository -y ppa:guilhem-fr/swftools
 RUN apt-get -y install swftools
 
 # ----------- Install WHOIS -------------
