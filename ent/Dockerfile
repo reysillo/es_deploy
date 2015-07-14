@@ -73,14 +73,16 @@ RUN echo "export VISIBLE=now" >> /etc/profile
 ADD tomcat_supervisord_wrapper.sh $TOMCAT_PATH/bin/tomcat_supervisord_wrapper.sh
 RUN chmod 755 $TOMCAT_PATH/bin/tomcat_supervisord_wrapper.sh
 
+# ----------- Install swftool -----------
+RUN add-apt-repository -y ppa:guilhem-fr/swftools
+RUN apt-get -y install swftools
+
+# ----------- Install WHOIS -------------
+# RUN add-apt-repository -y ppa:nathan-renniewaldock/ppa
+RUN apt-get -y install whois
+
 # Start
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 CMD ["/usr/bin/supervisord"]
 
-# ----------- Install swftool -------------#
-RUN add-apt-repository ppa:guilhem-fr/swftools
-RUN apt-get -y install swftools
 
-# ----------- Install WHOIS -------------#
-RUN add-apt-repository ppa:nathan-renniewaldock/ppa
-RUN apt-get -y install whois
