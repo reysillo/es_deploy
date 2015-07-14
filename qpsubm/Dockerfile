@@ -25,6 +25,7 @@ RUN apt-get -y install oracle-java8-installer
 RUN apt-get install oracle-java8-set-default
 
 # ----------- Install tomcat -------------
+
 RUN \
     wget -O /tmp/tomcat.tar.gz http://archive.apache.org/dist/tomcat/tomcat-8/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz && \
   #mkdir $TOMCAT_PATH && \
