@@ -77,20 +77,22 @@ RUN echo "export VISIBLE=now" >> /etc/profile
 ADD tomcat_supervisord_wrapper.sh $TOMCAT_PATH/bin/tomcat_supervisord_wrapper.sh
 RUN chmod 755 $TOMCAT_PATH/bin/tomcat_supervisord_wrapper.sh
 
+# ----------- Reconfigure Locales -------------
+# RUN apt-get -y install language-pack-en
+# RUN apt-get -qqy install locales
+# RUN locale-gen --purge de_DE de_DE.UTF-8
+# RUN locale-gen --purge en_US en_US.UTF-8
+
+# ENV LANG en_US.UTF-8
+# ENV LANGUAGE en_US.UTF-8
+# ENV LC_ALL en_US.UTF-8
+
+# RUN locale-gen en_US.UTF-8
+# RUN dpkg-reconfigure locales
+# RUN update-locale LANG=en_US.UTF-8
+
+
 # Start
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 CMD ["/usr/bin/supervisord"]
 
-# ----------- Reconfigure Locales -------------
-RUN apt-get -y install language-pack-en
-RUN apt-get -qqy install locales
-RUN locale-gen --purge de_DE de_DE.UTF-8
-RUN locale-gen --purge en_US en_US.UTF-8
-
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
-
-RUN locale-gen en_US.UTF-8
-RUN dpkg-reconfigure locales
-RUN update-locale LANG=en_US.UTF-8
