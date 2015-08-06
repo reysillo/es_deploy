@@ -19,6 +19,8 @@ RUN \
 ENV TOMCAT_VERSION 8.0.21
 ENV TOMCAT_PORT 8080
 ENV TOMCAT_PATH /opt/tomcat
+ENV ACTIVEMQ_VERSION 5.10.0
+ENV ACTIVEMQ_PATH /opt/activemq
 
 # ----------- Install java 8 -------------
 RUN apt-get -y install software-properties-common
@@ -57,6 +59,19 @@ RUN \
   ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/bin
 
 RUN phantomjs --version
+
+# ----------- Install ActiveMQ -------------#
+RUN \
+  wget -O /tmp/activemq.tar.gz http://archive.apache.org/dist/activemq/$ACTIVEMQ_VERSION/apache-activemq-$ACTIVEMQ_VERSION-bin.tar.gz && \
+  cd /tmp && \
+  tar zxf /tmp/activemq.tar.gz && \
+  ls /tmp && \
+  mv /tmp/apache-activemq* $ACTIVEMQ_PATH && \
+  rm /tmp/activemq.tar.gz
+
+  WORKDIR $ACTIVEMQ_PATH
+  EXPOSE 61616 8161
+  #EXPOSE 61612 61613 61616 8161
 
 # ----------- Configure SSH -------------
 
