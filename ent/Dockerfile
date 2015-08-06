@@ -5,45 +5,34 @@ MAINTAINER Reinaldo Calderón
 # Commands
 
 # Set the locale
-RUN locale-gen en_US.UTF-8  
-ENV LANG en_US.UTF-8  
-ENV LANGUAGE en_US:en  
-ENV LC_ALL en_US.UTF-8 
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 RUN \
   apt-get update && \
   apt-get upgrade -y && \
-  apt-get install -y vim nano git wget libfreetype6 libfontconfig bzip2 zip unzip openssh-server supervisor && \
+  apt-get install -y vim nano git wget libfreetype6 libfontconfig bzip2 supervisor zip unzip openssh-server make g++ patch zlib1g-dev libgif-dev && \
   mkdir -p /srv/var /var/log/supervisor /opt
 
-
-ENV TOMCAT_VERSION 8.0.21
+ENV TOMCAT_VERSION 7.0.59
 ENV TOMCAT_PORT 8080
 ENV TOMCAT_PATH /opt/tomcat
+ENV ACTIVEMQ_VERSION 5.10.0
+ENV ACTIVEMQ_PATH /opt/activemq
 
-# ----------- Install java 8 -------------
-# this envs are for maintaining java updates.
-ENV JAVA_MAJOR_VERSION=8
-ENV JAVA_UPDATE_VERSION=51
-ENV JAVA_BUILD_NUMER=16
-# install java
-ENV JAVA_VERSION=1.${JAVA_MAJOR_VERSION}.0_${JAVA_UPDATE_VERSION}
-ENV JAVA_TARBALL=server-jre-${JAVA_MAJOR_VERSION}u${JAVA_UPDATE_VERSION}-linux-x64.tar.gz
-ENV JAVA_HOME=/opt/java/jdk${JAVA_VERSION}
+# ----------- Install java 7 -------------#
+RUN apt-get -y install software-properties-common
+RUN add-apt-repository ppa:webupd8team/java
+RUN apt-get -y update
+RUN echo "oracle-java7-installer shared/accepted-oracle-license-v1-1 boolean true" | debconf-set-selections
+RUN apt-get -y install oracle-java7-installer
+RUN apt-get install oracle-java7-set-default
 
-RUN wget --no-check-certificate --directory-prefix=/tmp \
-         --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" \
-         http://download.oracle.com/otn-pub/java/jdk/${JAVA_MAJOR_VERSION}u${JAVA_UPDATE_VERSION}-b${JAVA_BUILD_NUMER}/${JAVA_TARBALL} && \
-    mkdir -p /opt/java && \
-    tar -xzf /tmp/${JAVA_TARBALL} -C /opt/java/ && \
-    rm -rf /tmp/* && rm -rf /var/log/*
-
-
-# ----------- Install tomcat -------------
-
+# ----------- Install Tomcat -------------#
 RUN \
-    wget -O /tmp/tomcat.tar.gz http://archive.apache.org/dist/tomcat/tomcat-8/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz && \
-  #mkdir $TOMCAT_PATH && \
+  wget -O /tmp/tomcat.tar.gz http://archive.apache.org/dist/tomcat/tomcat-7/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz && \
   cd /tmp && \
   tar zxf /tmp/tomcat.tar.gz && \
   ls /tmp && \
@@ -55,23 +44,20 @@ RUN \
 EXPOSE $TOMCAT_PORT
 EXPOSE 22
 
-
-# ----------- Install PhantomJS -------------
-
-RUN sudo apt-get  -y install build-essential chrpath libssl-dev libxft-dev  libfreetype6 libfreetype6-dev libfontconfig1 libfontconfig1-dev
-
+# ----------- Install ActiveMQ -------------#
 RUN \
-  cd ~ && \
-  export PHANTOM_JS="phantomjs-1.9.8-linux-x86_64"  && \
-  wget https://bitbucket.org/ariya/phantomjs/downloads/$PHANTOM_JS.tar.bz2  && \
-  tar xvjf $PHANTOM_JS.tar.bz2  && \
-  mv $PHANTOM_JS /usr/local/share  && \
-  ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/bin
+  wget -O /tmp/activemq.tar.gz http://archive.apache.org/dist/activemq/$ACTIVEMQ_VERSION/apache-activemq-$ACTIVEMQ_VERSION-bin.tar.gz && \
+  cd /tmp && \
+  tar zxf /tmp/activemq.tar.gz && \
+  ls /tmp && \
+  mv /tmp/apache-activemq* $ACTIVEMQ_PATH && \
+  rm /tmp/activemq.tar.gz
 
-RUN phantomjs --version
+  WORKDIR $ACTIVEMQ_PATH
+  EXPOSE 61616 8161
+  #EXPOSE 61612 61613 61616 8161
 
 # ----------- Configure SSH -------------
-
 RUN echo deb http://archive.ubuntu.com/ubuntu trusty main universe > /etc/apt/sources.list.d/trusty.list
 
 # Clean
@@ -94,8 +80,16 @@ RUN echo "export VISIBLE=now" >> /etc/profile
 ADD tomcat_supervisord_wrapper.sh $TOMCAT_PATH/bin/tomcat_supervisord_wrapper.sh
 RUN chmod 755 $TOMCAT_PATH/bin/tomcat_supervisord_wrapper.sh
 
- 
+# ----------- Install swftool -----------
+# RUN add-apt-repository -y ppa:guilhem-fr/swftools
+RUN apt-get -y install swftools
+
+# ----------- Install WHOIS -------------
+# RUN add-apt-repository -y ppa:nathan-renniewaldock/ppa
+RUN apt-get -y install whois
 
 # Start
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 CMD ["/usr/bin/supervisord"]
+
+
