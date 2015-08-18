@@ -55,7 +55,7 @@ EXPOSE 22
 
 #  WORKDIR $ACTIVEMQ_PATH
 #  EXPOSE 61616 8162
-#  #EXPOSE 61612 61613 61616 8161
+#  EXPOSE 61612 61613 61616 8161
 
 # ----------- Configure SSH -------------
 RUN echo deb http://archive.ubuntu.com/ubuntu trusty main universe > /etc/apt/sources.list.d/trusty.list
