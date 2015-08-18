@@ -54,7 +54,7 @@ RUN \
   rm /tmp/activemq.tar.gz
 
   WORKDIR $ACTIVEMQ_PATH
-  EXPOSE 61616 8161
+  EXPOSE 61616 8162
   #EXPOSE 61612 61613 61616 8161
 
 # ----------- Configure SSH -------------
