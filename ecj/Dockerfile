@@ -23,7 +23,7 @@ RUN apt-get install oracle-java7-set-default
 
 # ----------- Install tomcat -------------
 RUN \
-  wget -O /tmp/tomcat.tar.gz http://apache.arvixe.com/tomcat/tomcat-8/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz && \
+  wget -O /tmp/tomcat.tar.gz http://archive.apache.org/dist/tomcat/tomcat-8/v$TOMCAT_VERSION/bin/apache-tomcat-$TOMCAT_VERSION.tar.gz && \
   cd /tmp && \
   tar zxf /tmp/tomcat.tar.gz && \
   ls /tmp && \
