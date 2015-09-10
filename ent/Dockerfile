@@ -42,6 +42,7 @@ RUN \
   rm /tmp/tomcat.tar.gz
 
 EXPOSE $TOMCAT_PORT
+EXPOSE 1317
 EXPOSE 22
 
 # ----------- Configure SSH -------------

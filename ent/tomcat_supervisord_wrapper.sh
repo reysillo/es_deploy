@@ -18,6 +18,7 @@ echo "Starting Tomcat"
 
 # Uncomment to increase Tomcat's maximum heap allocation
 # export JAVA_OPTS=-Xmx512M $JAVA_OPTS
+export JAVA_OPTS=-Xdebug -Xrunjdwp:transport=dt_socket,address=1317,suspend=n,server=y
 export JAVA_OPTS=-Xms128m -Xmx3072m -XX:MaxPermSize=256m $JAVA_OPTS
 . /opt/tomcat/bin/catalina.sh start
 
